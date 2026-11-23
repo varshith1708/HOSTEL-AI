@@ -1,0 +1,23 @@
+[project]
+name = "ai-it-helpdesk-analyzer"
+version = "1.0.0"
+description = "Enterprise AI IT Helpdesk Incident & Ticket Analyzer with Multi-Class Classification, Priority Scoring, and Automated Team Routing"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "Flask>=3.0.0",
+    "Flask-SQLAlchemy>=3.1.0",
+    "Flask-Migrate>=4.0.0",
+    "SQLAlchemy>=2.0.0",
+    "gunicorn>=22.0.0",
+    "scikit-learn>=1.4.0",
+    "python-dotenv>=1.0.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold text-dark mb-1">Helpdesk Operations Dashboard</h2>
+        <p class="text-secondary mb-0">Automated incident classification queue and team routing status.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>New Incident Analysis
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0 fw-bold"><i class="bi bi-list-task me-2"></i>Active Incident Queue ({{ tickets|length }})</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Summary</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Routing Team</th>
+                    <th>Confidence</th>
+                    <th>Detected Keywords</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tickets %}
+                <tr>
+                    <td class="fw-bold text-muted">#{{ t.id }}</td>
+                    <td>
+                        <div class="fw-semibold">{{ t.title }}</div>
+                        <small class="text-muted text-truncate d-block" style="max-width: 320px;">{{ t.description }}</small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border">{{ t.category }}</span></td>
+                    <td>
+                        {% if t.priority == 'Critical' %}
+                            <span class="badge bg-danger">Critical</span>
+                        {% elif t.priority == 'High' %}
+                            <span class="badge bg-warning text-dark">High</span>
+                        {% elif t.priority == 'Medium' %}
+                            <span class="badge bg-primary">Medium</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Low</span>
+                        {% endif %}
+                    </td>
+                    <td><span class="fw-semibold text-dark">{{ t.assigned_team }}</span></td>
+                    <td>{{ t.to_dict().confidence_pct }}</td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for term in t.detected_terms %}
+                                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle small">{{ term }}</span>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td><span class="badge bg-success-subtle text-success border border-success-subtle">{{ t.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">
+                        No incidents in database yet. Use the <a href="{{ url_for('main.index') }}">Analyzer</a> or run the database seeder.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
